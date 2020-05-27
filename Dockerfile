@@ -1,7 +1,9 @@
 FROM ubuntu:20.04
 
+ENV TZ=Asia/Shanghai
+
 # Let's start with some basic stuff.
-RUN apt-get update && apt-get install -qqy \
+RUN apt-get update && DEBIAN_FRONTEND="noninteractive" apt-get install -qqy \
     python3-pip \
     apt-transport-https \
     ca-certificates \
@@ -9,9 +11,9 @@ RUN apt-get update && apt-get install -qqy \
     git \
     lxc \
     wget \
+    tzdata \
     nodejs \
     vim \
-    yarn \
     npm \
     && npm install -g @quasar/cli \
     && curl -sSL https://get.docker.com/ | sh
