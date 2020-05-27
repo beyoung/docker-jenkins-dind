@@ -4,13 +4,13 @@ This Jenkins Docker image provides Docker inside itself, which allows you to run
 Run it with mounted directory from host:
 
 ```
-docker run --name jenkins-dind --privileged -d -p 8080:8080 -v /your/path:/var/lib/jenkins killercentury/jenkins-dind
+docker run --name jenkins-dind --privileged -d -p 8080:8080 -v /your/path:/var/lib/jenkins beyouth/jenkins-dind
 ```
 
 ## Self-signed private registry
 When using a private registry with a self-signed certificate, the Docker daemon needs to trust the registry's certificate.  Run the container with the `DOCKER_REGISTRY_CERT` and `DOCKER_REGISTRY_NAME` environment variables set to configure Docker:
 ```
-docker run --name jenkins-dind --privileged -d -p 8080:8080 -e DOCKER_REGISTRY_CERT=/certs/registry.crt -e DOCKER_REGISTRY_NAME=registry:5000 -v /certs:/certs -v /your/path:/var/lib/jenkins killercentury/jenkins-dind
+docker run --name jenkins-dind --privileged -d -p 8080:8080 -e DOCKER_REGISTRY_CERT=/certs/registry.crt -e DOCKER_REGISTRY_NAME=registry:5000 -v /certs:/certs -v /your/path:/var/lib/jenkins beyouth/jenkins-dind
 ```
 This configures Docker to trust the registry at `registry:5000`.
 
