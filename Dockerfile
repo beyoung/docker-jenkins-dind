@@ -1,28 +1,19 @@
-FROM debian:stretch
-
-MAINTAINER Stephane Cottin <stephane.cottin@vixns.com>
+FROM ubuntu:20.04
 
 # Let's start with some basic stuff.
-RUN apt-get update -qq && apt-get install -qqy \
-    python-setuptools \
+RUN apt-get update && apt-get install -qqy \
+    python3-pip \
     apt-transport-https \
     ca-certificates \
     curl \
     git \
-    lxc \
-    iptables
+    lxc
 
 # Install syslog-stdout
-RUN easy_install syslog-stdout supervisor-stdout
+RUN pip3 install syslog-stdout supervisor-stdout
 
 # Install Docker from Docker Inc. repositories.
 RUN curl -sSL https://get.docker.com/ | sh
-
-# Install Docker Compose
-ENV DOCKER_COMPOSE_VERSION 1.12.0
-
-RUN curl -L https://github.com/docker/compose/releases/download/${DOCKER_COMPOSE_VERSION}/docker-compose-`uname -s`-`uname -m` > /usr/local/bin/docker-compose
-RUN chmod +x /usr/local/bin/docker-compose
 
 # Install the wrapper script from https://raw.githubusercontent.com/docker/docker/master/hack/dind.
 ADD ./dind /usr/local/bin/dind
@@ -32,8 +23,8 @@ ADD ./wrapdocker /usr/local/bin/wrapdocker
 RUN chmod +x /usr/local/bin/wrapdocker
 
 # Install Jenkins
-RUN wget -q -O - https://pkg.jenkins.io/debian/jenkins.io.key | apt-key add -
-RUN sh -c 'echo deb https://pkg.jenkins.io/debian binary/ > /etc/apt/sources.list.d/jenkins.list'
+RUN wget -q -O - https://pkg.jenkins.io/debian-stable/jenkins.io.key | sudo apt-key add -
+RUN sh -c 'echo deb https://pkg.jenkins.io/debian-stable binary/ > /etc/apt/sources.list.d/jenkins.list'
 RUN apt-get update && apt-get install -y openjdk-8-jdk-headless zip supervisor jenkins && rm -rf /var/lib/apt/lists/*
 RUN usermod -a -G docker jenkins && mkdir /tmp/hsperfdata_jenkins
 ENV JENKINS_HOME /var/lib/jenkins
@@ -52,11 +43,8 @@ VOLUME /var/lib/docker
 
 ADD supervisord.conf /etc/supervisor/conf.d/supervisord.conf
 
-# install python tools
-RUN easy_install pip
-
 COPY requirements.txt /tmp/requirements.txt
-RUN pip install -r /tmp/requirements.txt
+RUN pip3 install -r /tmp/requirements.txt
 
 # copy files onto the filesystem
 COPY files/ /
