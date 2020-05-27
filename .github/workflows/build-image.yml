@@ -1,0 +1,23 @@
+name: Docker Image CI
+
+on: push
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout the repo
+        uses: actions/checkout@v2
+
+      - name: Docker build & Push
+        uses: opspresso/action-docker@v0.2.8
+        with:
+          args: --docker
+        env:
+          USERNAME: ${{ secrets.DOCKER_USERNAME }}
+          PASSWORD: ${{ secrets.DOCKER_PASSWD }}
+          REGISTRY: "registry.hub.docker.com"
+          DOCKERFILE: "Dockerfile"
+          IMAGE_NAME: "docker-jenkins-dind"
+          TAG_NAME: "0.0.1"
+          LATEST: "true"
