@@ -8,26 +8,23 @@ RUN apt-get update && apt-get install -qqy \
     curl \
     git \
     lxc \
-    wget
-
-# Install syslog-stdout
-RUN pip3 install syslog-stdout supervisor-stdout
-
-# Install Docker from Docker Inc. repositories.
-RUN curl -sSL https://get.docker.com/ | sh
+    wget \
+    && pip3 install syslog-stdout supervisor-stdout \
+    && curl -sSL https://get.docker.com/ | sh
 
 # Install the wrapper script from https://raw.githubusercontent.com/docker/docker/master/hack/dind.
 ADD ./dind /usr/local/bin/dind
-RUN chmod +x /usr/local/bin/dind
-
 ADD ./wrapdocker /usr/local/bin/wrapdocker
-RUN chmod +x /usr/local/bin/wrapdocker
+
+RUN chmod +x /usr/local/bin/dind \
+    && chmod +x /usr/local/bin/wrapdocker
 
 # Install Jenkins
-RUN wget -q -O - https://pkg.jenkins.io/debian-stable/jenkins.io.key | apt-key add -
-RUN sh -c 'echo deb https://pkg.jenkins.io/debian-stable binary/ > /etc/apt/sources.list.d/jenkins.list'
-RUN apt-get update && apt-get install -y openjdk-8-jdk-headless zip supervisor jenkins && rm -rf /var/lib/apt/lists/*
-RUN usermod -a -G docker jenkins && mkdir /tmp/hsperfdata_jenkins
+RUN wget -q -O - https://pkg.jenkins.io/debian-stable/jenkins.io.key | apt-key add - \
+    && sh -c 'echo deb https://pkg.jenkins.io/debian-stable binary/ > /etc/apt/sources.list.d/jenkins.list' \
+    && apt-get update && apt-get install -y openjdk-8-jdk-headless zip supervisor jenkins && rm -rf /var/lib/apt/lists/* \
+    && usermod -a -G docker jenkins && mkdir /tmp/hsperfdata_jenkins
+
 ENV JENKINS_HOME /var/lib/jenkins
 VOLUME /var/lib/jenkins
 

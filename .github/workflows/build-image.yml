@@ -17,6 +17,6 @@ jobs:
           USERNAME: ${{ secrets.DOCKER_USERNAME }}
           PASSWORD: ${{ secrets.DOCKER_PASSWD }}
           DOCKERFILE: "Dockerfile"
-          IMAGE_NAME: "docker-jenkins-dind"
+          IMAGE_NAME: "beyouth/docker-jenkins-dind"
           TAG_NAME: "0.0.2"
           LATEST: "true"
