@@ -13,7 +13,7 @@ RUN apt-get update && apt-get install -qqy \
     vim \
     yarn \
     npm \
-    npm install -g @quasar/cli \
+    && npm install -g @quasar/cli \
     && curl -sSL https://get.docker.com/ | sh
 
 # Install the wrapper script from https://raw.githubusercontent.com/docker/docker/master/hack/dind.
