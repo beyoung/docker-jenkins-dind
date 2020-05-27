@@ -9,6 +9,11 @@ RUN apt-get update && apt-get install -qqy \
     git \
     lxc \
     wget \
+    nodejs \
+    vim \
+    yarn \
+    npm \
+    npm install -g @quasar/cli \
     && curl -sSL https://get.docker.com/ | sh
 
 # Install the wrapper script from https://raw.githubusercontent.com/docker/docker/master/hack/dind.
@@ -33,9 +38,10 @@ ENV JENKINS_UC https://updates.jenkins.io
 
 RUN curl -o /usr/local/bin/plugins.sh \
   https://raw.githubusercontent.com/jenkinsci/docker/master/plugins.sh && \
-  chmod +x /usr/local/bin/plugins.sh
-#COPY plugins.sh /usr/local/bin/plugins.sh
-#RUN chmod +x /usr/local/bin/plugins.sh
+  chmod +x /usr/local/bin/plugins.sh && \
+  ssh-keygen -t rsa -N "" -f ~/.ssh/id_rsa && \
+  mkdir -p /var/lib/jenkins/.ssh/ && \
+  cp ~/.ssh/* /var/lib/jenkins/.ssh/
 
 # Define additional metadata for our image.
 VOLUME /var/lib/docker
@@ -45,7 +51,8 @@ RUN pip3 install -r /tmp/requirements.txt
 
 # copy files onto the filesystem
 COPY files/ /
-RUN chmod +x /docker-entrypoint /usr/local/bin/*
+RUN chmod +x /docker-entrypoint /usr/local/bin/* && \
+    chown -R jenkins /var/lib/jenkins/.ssh/
 
 ADD supervisord.conf /etc/supervisor/conf.d/supervisord.conf
 
