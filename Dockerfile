@@ -9,7 +9,6 @@ RUN apt-get update && apt-get install -qqy \
     git \
     lxc \
     wget \
-    && pip3 install syslog-stdout supervisor-stdout \
     && curl -sSL https://get.docker.com/ | sh
 
 # Install the wrapper script from https://raw.githubusercontent.com/docker/docker/master/hack/dind.
@@ -33,13 +32,13 @@ VOLUME /var/lib/jenkins
 ENV JENKINS_UC https://updates.jenkins.io
 
 RUN curl -o /usr/local/bin/plugins.sh \
-  https://raw.githubusercontent.com/jenkinsci/docker/75b17c48494d4987aa5c2ce7ad02820fda932ce4/plugins.sh && \
+  https://raw.githubusercontent.com/jenkinsci/docker/master/plugins.sh && \
   chmod +x /usr/local/bin/plugins.sh
+#COPY plugins.sh /usr/local/bin/plugins.sh
+#RUN chmod +x /usr/local/bin/plugins.sh
 
 # Define additional metadata for our image.
 VOLUME /var/lib/docker
-
-ADD supervisord.conf /etc/supervisor/conf.d/supervisord.conf
 
 COPY requirements.txt /tmp/requirements.txt
 RUN pip3 install -r /tmp/requirements.txt
@@ -47,6 +46,8 @@ RUN pip3 install -r /tmp/requirements.txt
 # copy files onto the filesystem
 COPY files/ /
 RUN chmod +x /docker-entrypoint /usr/local/bin/*
+
+ADD supervisord.conf /etc/supervisor/conf.d/supervisord.conf
 
 EXPOSE 8080
 
