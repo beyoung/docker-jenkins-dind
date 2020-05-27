@@ -2,3 +2,4 @@ PyYAML==3.12
 docker-squash==1.0.1
 sh==1.11
 tag-version==0.0.3
+ansible

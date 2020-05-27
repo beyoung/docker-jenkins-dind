@@ -7,7 +7,8 @@ RUN apt-get update && apt-get install -qqy \
     ca-certificates \
     curl \
     git \
-    lxc
+    lxc \
+    wget
 
 # Install syslog-stdout
 RUN pip3 install syslog-stdout supervisor-stdout
@@ -23,7 +24,7 @@ ADD ./wrapdocker /usr/local/bin/wrapdocker
 RUN chmod +x /usr/local/bin/wrapdocker
 
 # Install Jenkins
-RUN wget -q -O - https://pkg.jenkins.io/debian-stable/jenkins.io.key | sudo apt-key add -
+RUN wget -q -O - https://pkg.jenkins.io/debian-stable/jenkins.io.key | apt-key add -
 RUN sh -c 'echo deb https://pkg.jenkins.io/debian-stable binary/ > /etc/apt/sources.list.d/jenkins.list'
 RUN apt-get update && apt-get install -y openjdk-8-jdk-headless zip supervisor jenkins && rm -rf /var/lib/apt/lists/*
 RUN usermod -a -G docker jenkins && mkdir /tmp/hsperfdata_jenkins
