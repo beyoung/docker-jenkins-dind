@@ -43,7 +43,8 @@ RUN curl -o /usr/local/bin/plugins.sh \
   chmod +x /usr/local/bin/plugins.sh && \
   ssh-keygen -t rsa -N "" -f ~/.ssh/id_rsa && \
   mkdir -p /var/lib/jenkins/.ssh/ && \
-  cp ~/.ssh/* /var/lib/jenkins/.ssh/
+  cp ~/.ssh/* /var/lib/jenkins/.ssh/ && \
+  chown -R jenkins /var/lib/jenkins/.ssh/
 
 # Define additional metadata for our image.
 VOLUME /var/lib/docker
@@ -53,8 +54,8 @@ RUN pip3 install -r /tmp/requirements.txt
 
 # copy files onto the filesystem
 COPY files/ /
-RUN chmod +x /docker-entrypoint /usr/local/bin/* && \
-    chown -R jenkins /var/lib/jenkins/.ssh/
+RUN chmod +x /docker-entrypoint /usr/local/bin/*
+
 
 ADD supervisord.conf /etc/supervisor/conf.d/supervisord.conf
 
