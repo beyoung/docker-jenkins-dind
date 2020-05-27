@@ -1,7 +1,7 @@
 version: '2'
 services:
   jenkins:
-    image: beyouth/docker-jenkins-dind:0.0.1
+    image: beyouth/docker-jenkins-dind:0.0.2
     privileged: true
     restart: always
     ports:
